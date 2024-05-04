@@ -2,7 +2,9 @@
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
+load_dotenv()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -35,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django.contrib.postgres',
+    'django.contrib.postgres',
 
     # 'django_migration_scripts',
 
@@ -45,8 +47,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     # 'rest_framework.authtoken',
     'django_jalali',
-    # 'django_celery_beat',
-    # 'django_celery_results',
+    'django_celery_beat',
+    'django_celery_results',
     # 'django_linear_migrations',
 
     *FIRST_PARTY_APPS,
@@ -212,6 +214,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 USE_SSL = True
 
+
+# Redis settings
 def get_redis_connection_string(host: str, port: str, username: str = "",
                                 password: str = "") -> str:
     if not username and not password:
@@ -220,27 +224,27 @@ def get_redis_connection_string(host: str, port: str, username: str = "",
     return f'redis://{username}:{password}@{host}:{port}/0'
 
 
-# REDIS_HOST = os.environ["REDIS_HOST"]
-# REDIS_PORT = os.environ["REDIS_PORT"]
-# REDIS_USER = os.environ["REDIS_USER"]
-# REDIS_PASSWORD = os.environ["REDIS_PASSWORD"]
+REDIS_HOST = os.environ["REDIS_HOST"]
+REDIS_PORT = os.environ["REDIS_PORT"]
+REDIS_USER = os.environ.get("REDIS_USER", "")
+REDIS_PASSWORD = os.environ["REDIS_PASSWORD"]
 
 # Celery settings
-# CELERY_BROKER_URL = get_redis_connection_string(REDIS_HOST,
-#                                                 REDIS_PORT,
-#                                                 REDIS_USER,
-#                                                 REDIS_PASSWORD)
-# CELERY_RESULT_BACKEND = 'django-db'
-# CELERY_ACCEPT_CONTENT = ['pickle', 'json']
-# CELERY_TASK_SERIALIZER = 'pickle'
-# CELERY_RESULT_SERIALIZER = 'pickle'
-# CELERY_TIMEZONE = 'Iran'
-# CELERY_WORKER_SEND_TASK_EVENTS = True
-# CELERY_TASK_SEND_SENT_EVENT = True
-# CELERY_BROKER_TRANSPORT_OPTIONS = {
-#     'priority_steps': list(range(10)),
-#     'queue_order_strategy': 'priority',
-# }
+CELERY_BROKER_URL = get_redis_connection_string(REDIS_HOST,
+                                                REDIS_PORT,
+                                                REDIS_USER,
+                                                REDIS_PASSWORD)
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_TIMEZONE = 'Iran'
+CELERY_WORKER_SEND_TASK_EVENTS = True
+CELERY_TASK_SEND_SENT_EVENT = True
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'priority_steps': list(range(10)),
+    'queue_order_strategy': 'priority',
+}
 
 
 # Cache
@@ -252,31 +256,32 @@ def redis_reverse_key_maker(key):
     return key
 
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': get_redis_connection_string(REDIS_HOST,
-#                                                 REDIS_PORT,
-#                                                 REDIS_USER,
-#                                                 REDIS_PASSWORD),
-#         'OPTIONS': {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#             "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
-#         },
-#         'KEY_FUNCTION': redis_key_maker,
-#         'REVERSE_KEY_FUNCTION': redis_reverse_key_maker
-#     },
-#     'cache_page': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': get_redis_connection_string(REDIS_HOST,
-#                                                 REDIS_PORT,
-#                                                 REDIS_USER,
-#                                                 REDIS_PASSWORD),
-#         'OPTIONS': {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#         },
-#     },
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': get_redis_connection_string(REDIS_HOST,
+                                                REDIS_PORT,
+                                                REDIS_USER,
+                                                REDIS_PASSWORD),
+        'OPTIONS': {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
+        },
+        'KEY_FUNCTION': redis_key_maker,
+        'REVERSE_KEY_FUNCTION': redis_reverse_key_maker
+    },
+    'cache_page': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': get_redis_connection_string(REDIS_HOST,
+                                                REDIS_PORT,
+                                                REDIS_USER,
+                                                REDIS_PASSWORD),
+        'OPTIONS': {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+}
+
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 CACHE_TTL = 60 * 1

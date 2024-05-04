@@ -18,9 +18,6 @@ class UserRegisterByPhoneNumberSerializer(serializers.ModelSerializer):
         if not validate_password(attrs['password']):
             raise serializers.ValidationError('Your password is not acceptable')
 
-        if existing_user and existing_user.is_active:
-            raise serializers.ValidationError('User with this phone number already exists.')
-
         if existing_user and not existing_user.is_active:
             raise serializers.ValidationError('User with this phone number is inactive.')
 

@@ -1,0 +1,60 @@
+{% extends "admin/change_form.html" %}
+{% load i18n static admin_modify %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+    <div id="content-main">
+        <div>{{ title }}</div>
+
+        {% block form %}
+            <form action="" method="POST"
+                  {% if multipart %}enctype="multipart/form-data"{% endif %}>
+                {% csrf_token %}
+                {% if form.non_field_errors|length > 0 %}
+                    <p class="errornote">"لطفا خطا(ها)ی زیر را برطرف کنید"</p>
+                    {{ form.non_field_errors }}
+                {% endif %}
+                <fieldset class="module aligned">
+                    {% for field in form %}
+                        <div class="form-row">
+                            {{ field.errors }}
+                            {{ field }}
+                            {% if field.is_hidden is False %}{{ field.label_tag }}
+                                {% if field.field.help_text %}
+                                    <p class="help">
+                                        {{ field.field.help_text|safe }}
+                                    </p>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </fieldset>
+                {% block after_fieldset %}
+                {% endblock %}
+                {% block submit %}
+                    <div class="submit-row">
+                        <input type="submit" class="default" value="{{ submit_text }}">
+                    </div>
+                {% endblock submit %}
+            </form>
+
+        {% endblock form %}
+    </div>
+
+    {% block results %}{% endblock results %}
+{% endblock %}
+{% block footer %}
+    <div id="footer"></div>
+    <script type="text/javascript" src="{% static 'admin/js/django_jalali.min.js' %}"></script>
+    {#TODO: update js to fix datepicker#}
+{% endblock %}

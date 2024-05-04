@@ -3,7 +3,7 @@ from django.db import models
 from django_lifecycle import hook, BEFORE_CREATE
 from django_lifecycle.mixins import LifecycleModelMixin
 
-from account.querysets.user_queryset import UserQueryset
+from account.querysets.user_queryset import CustomUserManager
 from utilities.models.base_model import BaseModel
 from utilities.models.phone_field import PhoneField
 
@@ -23,7 +23,7 @@ class User(LifecycleModelMixin, AbstractUser, BaseModel):
     telegram_admin_bot_chat_id = models.BigIntegerField(null=True, db_index=True)
     can_approve_payment = models.BooleanField(default=False)
 
-    objects = UserQueryset.as_manager()
+    objects = CustomUserManager()
 
     class Meta:
         unique_together = ('phone_country_code', 'phone_number')

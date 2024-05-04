@@ -177,3 +177,14 @@ def end_of_month(date_or_datetime=None):
 def digitize_timedelta(time_delta):
     total_seconds = int(time_delta.total_seconds())
     return '{}:{:02}'.format(total_seconds // 60 ** 2, total_seconds % 60 ** 2 // 60)
+
+
+def get_string_jalali(date_or_datetime_obj, datetime_format='%Y-%m-%d %H:%M:%S',
+                      date_format='%Y-%m-%d'):
+    if date_or_datetime_obj:
+        if isinstance(date_or_datetime_obj, datetime.datetime):
+            return jdatetime.datetime.fromgregorian(
+                datetime=timezone.localtime(date_or_datetime_obj)).strftime(datetime_format)
+        elif isinstance(date_or_datetime_obj, datetime.date):
+            return jdatetime.date.fromgregorian(date=date_or_datetime_obj).strftime(date_format)
+    return '-'

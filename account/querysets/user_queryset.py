@@ -1,8 +1,7 @@
-from django.db.models import QuerySet
+from django.contrib.auth.models import UserManager
 
 
-class UserQueryset(QuerySet):
-
+class CustomUserManager(UserManager):
     def existing(self, phone_number, phone_country_code):
         return self.filter(
             phone_number=phone_number,

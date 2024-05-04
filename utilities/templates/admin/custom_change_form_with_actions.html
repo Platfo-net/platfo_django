@@ -1,0 +1,11 @@
+{% extends 'admin/change_form.html' %}
+
+{% block submit_buttons_bottom %}
+    {{ block.super }}
+    {% for action in actions %}
+    <div class="submit-row">
+            <input type="submit" value="{{ action.label }}" title="{{ action.short_description }}",
+                   name="{{ action.name }}">
+    </div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    {{ form.media }}
+    <style>
+        .panel-body form label {
+            min-width: 75px;
+        }
+    </style>
+{% endblock %}
