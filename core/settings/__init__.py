@@ -4,11 +4,11 @@ __author__ = 'Arian'
 
 # Secret Keys
 os.environ["SECRET_KEY"] = os.environ.get("SECRET_KEY",
-                                          "django-insecure-z98&ulx0i4ndx=ckxeecu8r6fm**r++hw8*g8av8&0ay(b(9rx")
+                                          "sample_secret_key")
 
-os.environ["DATABASE_NAME"] = os.environ.get("DATABASE_NAME", "miare")
-os.environ["DATABASE_USER"] = os.environ.get("DATABASE_USER", "miare")
-os.environ["DATABASE_PASSWORD"] = os.environ.get("DATABASE_PASSWORD", "miare")
+os.environ["DATABASE_NAME"] = os.environ.get("DATABASE_NAME", "platfo")
+os.environ["DATABASE_USER"] = os.environ.get("DATABASE_USER", "postgres")
+os.environ["DATABASE_PASSWORD"] = os.environ.get("DATABASE_PASSWORD", "postgres")
 os.environ["DATABASE_HOST"] = os.environ.get("DATABASE_HOST", "localhost")
 os.environ["DATABASE_PORT"] = os.environ.get("DATABASE_PORT", "5432")
 

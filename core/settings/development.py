@@ -11,6 +11,6 @@ ALLOWED_HOSTS = ['*']
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-# MIDDLEWARE.insert(1, 'debug_toolbar.middleware.DebugToolbarMiddleware')
-# INSTALLED_APPS.append('debug_toolbar')
+MIDDLEWARE.insert(1, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+INSTALLED_APPS.append('debug_toolbar')
 INTERNAL_IPS = ['127.0.0.1', ]

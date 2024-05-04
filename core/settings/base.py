@@ -1,9 +1,10 @@
 # yapf: disable
 
 import os
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 
@@ -15,9 +16,15 @@ ALLOWED_HOSTS = []
 
 # Application definition apps
 FIRST_PARTY_APPS = [
-    # 'utilities',
+    'account',
+    'credit',
+    'etl',
+    'store',
+    'notification',
+    'llm',
+    'telegram',
 
-    # 'account',
+    'utilities',
 ]
 
 INSTALLED_APPS = [
@@ -30,14 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'django.contrib.postgres',
 
-    # 'jalali_date',
     # 'django_migration_scripts',
 
     # 'corsheaders',
 
-    # 'rest_framework',
+    'rest_framework',
+    'drf_spectacular',
     # 'rest_framework.authtoken',
-    # 'django_jalali',
+    'django_jalali',
     # 'django_celery_beat',
     # 'django_celery_results',
     # 'django_linear_migrations',
@@ -46,17 +53,13 @@ INSTALLED_APPS = [
 
     # 'import_export',
     # 'django_json_widget',
-    # 'drf_multiple_model',
     # 'psql_optimizer',
 ]
 
 MIDDLEWARE = [
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-
-    # 'corsheaders.middleware.CorsMiddleware',
-    # 'django.middleware.security.SecurityMiddleware',
-    # 'django.contrib.sessions.middleware.SessionMiddleware',
 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -64,7 +67,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    # 'utilities.middlewares.business_logic_middleware.ApplicationExceptionMiddleware',
+    'utilities.middlewares.business_logic_middleware.ApplicationExceptionMiddleware',
 
 ]
 
@@ -88,11 +91,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 ROOT_URLCONF = 'core.urls'
 
+AUTH_USER_MODEL = 'account.User'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')),
-                              "templates")],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -109,36 +113,22 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
-    },
-    # 'default': {
-    #     'ENGINE': 'psqlextra.backend',
-    #     'NAME': os.environ["DATABASE_NAME"],
-    #     'USER': os.environ["DATABASE_USER"],
-    #     'PASSWORD': os.environ["DATABASE_PASSWORD"],
-    #     'HOST': os.environ["DATABASE_HOST"],
-    #     'PORT': os.environ["DATABASE_PORT"],
-    # }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ["DATABASE_NAME"],
+        'USER': os.environ["DATABASE_USER"],
+        'PASSWORD': os.environ["DATABASE_PASSWORD"],
+        'HOST': os.environ["DATABASE_HOST"],
+        'PORT': os.environ["DATABASE_PORT"],
+    }
 }
 
-# REST_FRAMEWORK = {
-#     'EXCEPTION_HANDLER': 'utilities.http.exceptions.exception_handler',
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.TokenAuthentication',
-#     ),
-#     'DEFAULT_PAGINATION_CLASS':
-#         'rest_framework.pagination.PageNumberPagination',
-#     'PAGE_SIZE': 15,
-#     'DEFAULT_THROTTLE_RATES': {
-#         'burst': '1/minute',
-#         'voucher': '5/minute',
-#         'create_order': '20/minute',
-#         'cancel_order': '20/minute',
-#         'remove_item_from_cart': '20/minute',
-#         'create_driver_payment': '3/day',
-#     },
-# }
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'utilities.http.exceptions.exception_handler',
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
@@ -157,9 +147,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = './front-end/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = './media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # CORS_ORIGIN_ALLOW_ALL = True
 #
