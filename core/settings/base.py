@@ -1,6 +1,7 @@
 # yapf: disable
 
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     # 'corsheaders',
 
     'rest_framework',
+    'rest_framework_simplejwt',
     'drf_spectacular',
     # 'rest_framework.authtoken',
     'django_jalali',
@@ -130,6 +132,14 @@ REST_FRAMEWORK = {
         'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=10),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=20),
 }
 
 # Internationalization
@@ -289,17 +299,23 @@ CACHE_TTL = 60 * 1
 # object storage related configs
 # If set true , django media will be uploaded to spaces , otherwise they will be stored locally
 # this setting tells django-storage not to add sign and expire params to uploaded files
-USE_S3 = False
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# directory that files are uploaded to
-# AWS_LOCATION = os.environ.get('AWS_LOCATION')
-# AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-# AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-# AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
-# AWS_S3_ENDPOINT_URL = os.environ.get('AWS_S3_ENDPOINT_URL')
-# AWS_S3_ADDRESSING_STYLE = os.environ.get('AWS_S3_ADDRESSING_STYLE', 'virtual')
+# S3 configs
+S3_HOST = os.environ.get('S3_HOST')
+S3_ROOT_USER = os.environ.get('S3_ROOT_USER')
+S3_ROOT_PASSWORD = os.environ.get('S3_ROOT_PASSWORD')
+
+S3_USER_PROFILE_BUCKET = os.environ.get('S3_USER_PROFILE_BUCKET')
+S3_SHOP_PRODUCT_IMAGE_BUCKET = os.environ.get('S3_SHOP_PRODUCT_IMAGE_BUCKET')
+S3_SHOP_CATEGORY_IMAGE_BUCKET = os.environ.get('S3_SHOP_CATEGORY_IMAGE_BUCKET')
+S3_TELEGRAM_BOT_IMAGES_BUCKET = os.environ.get('S3_TELEGRAM_BOT_IMAGES_BUCKET')
+S3_TELEGRAM_BOT_MENU_IMAGES_BUCKET = os.environ.get('S3_TELEGRAM_BOT_MENU_IMAGES_BUCKET')
+S3_PAYMENT_RECEIPT_IMAGE = os.environ.get('S3_PAYMENT_RECEIPT_IMAGE')
+S3_SHOP_TELEGRAM_CREDIT_EXTENDING = os.environ.get('S3_SHOP_TELEGRAM_CREDIT_EXTENDING')
+S3_KNOWLEDGE_BASE_BUCKET = os.environ.get('S3_KNOWLEDGE_BASE_BUCKET')
+S3_MESSAGE_BUILDER_IMAGE_BUCKET = os.environ.get('S3_MESSAGE_BUILDER_IMAGE_BUCKET')
 
 # HTTP Requests
 DEFAULT_REQUESTS_TIMEOUT = 10
