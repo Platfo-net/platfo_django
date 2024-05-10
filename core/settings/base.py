@@ -9,9 +9,9 @@ load_dotenv()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = os.environ.get("SECRET_KEY", "not-secure")
 
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", True)
 
 HOSTNAME = 'localhost:8000'
 
@@ -23,10 +23,9 @@ FIRST_PARTY_APPS = [
     'credit',
     'etl',
     'store',
-    'notification',
+    'social',
     'llm',
-    'telegram',
-
+    'telegram_app',
     'utilities',
 ]
 
@@ -118,11 +117,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ["DATABASE_NAME"],
-        'USER': os.environ["DATABASE_USER"],
-        'PASSWORD': os.environ["DATABASE_PASSWORD"],
-        'HOST': os.environ["DATABASE_HOST"],
-        'PORT': os.environ["DATABASE_PORT"],
+        'NAME': os.environ.get("DATABASE_NAME", "platfo"),
+        'USER': os.environ.get("DATABASE_USER", "postgres"),
+        'PASSWORD': os.environ.get("DATABASE_PASSWORD", "postgres"),
+        'HOST': os.environ.get("DATABASE_HOST", "localhost"),
+        'PORT': os.environ.get("DATABASE_PORT", 5432),
     }
 }
 
@@ -234,10 +233,10 @@ def get_redis_connection_string(host: str, port: str, username: str = "",
     return f'redis://{username}:{password}@{host}:{port}/0'
 
 
-REDIS_HOST = os.environ["REDIS_HOST"]
-REDIS_PORT = os.environ["REDIS_PORT"]
+REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
+REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
 REDIS_USER = os.environ.get("REDIS_USER", "")
-REDIS_PASSWORD = os.environ["REDIS_PASSWORD"]
+REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
 
 # Celery settings
 CELERY_BROKER_URL = get_redis_connection_string(REDIS_HOST,
@@ -311,11 +310,14 @@ S3_USER_PROFILE_BUCKET = os.environ.get('S3_USER_PROFILE_BUCKET')
 S3_SHOP_PRODUCT_IMAGE_BUCKET = os.environ.get('S3_SHOP_PRODUCT_IMAGE_BUCKET')
 S3_SHOP_CATEGORY_IMAGE_BUCKET = os.environ.get('S3_SHOP_CATEGORY_IMAGE_BUCKET')
 S3_TELEGRAM_BOT_IMAGES_BUCKET = os.environ.get('S3_TELEGRAM_BOT_IMAGES_BUCKET')
-S3_TELEGRAM_BOT_MENU_IMAGES_BUCKET = os.environ.get('S3_TELEGRAM_BOT_MENU_IMAGES_BUCKET')
+S3_TELEGRAM_BOT_MENU_IMAGES_BUCKET = os.environ.get(
+    'S3_TELEGRAM_BOT_MENU_IMAGES_BUCKET')
 S3_PAYMENT_RECEIPT_IMAGE = os.environ.get('S3_PAYMENT_RECEIPT_IMAGE')
-S3_SHOP_TELEGRAM_CREDIT_EXTENDING = os.environ.get('S3_SHOP_TELEGRAM_CREDIT_EXTENDING')
+S3_SHOP_TELEGRAM_CREDIT_EXTENDING = os.environ.get(
+    'S3_SHOP_TELEGRAM_CREDIT_EXTENDING')
 S3_KNOWLEDGE_BASE_BUCKET = os.environ.get('S3_KNOWLEDGE_BASE_BUCKET')
-S3_MESSAGE_BUILDER_IMAGE_BUCKET = os.environ.get('S3_MESSAGE_BUILDER_IMAGE_BUCKET')
+S3_MESSAGE_BUILDER_IMAGE_BUCKET = os.environ.get(
+    'S3_MESSAGE_BUILDER_IMAGE_BUCKET')
 
 # HTTP Requests
 DEFAULT_REQUESTS_TIMEOUT = 10
