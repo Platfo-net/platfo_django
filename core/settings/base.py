@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_jalali',
     'django_celery_beat',
     'django_celery_results',
+    'django_extensions',
     # 'django_linear_migrations',
 
     *FIRST_PARTY_APPS,

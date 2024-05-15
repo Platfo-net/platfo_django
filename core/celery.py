@@ -28,14 +28,13 @@ tasks = {
     # },
 }
 
-# app.conf.beat_schedule = tasks
+app.conf.beat_schedule = tasks
 
-# app.conf.task_routes = (
-#     [
-#         ('utilities.tasks.send_sms_task', {'queue': 'sms'}),
-#         ('utilities.tasks.send_plain_text_sms_task', {'queue': 'sms'}),
-#         ('utilities.tasks.send_otp_sms_task', {'queue': 'sms'}),
-#         ('etl.tasks.*', {'queue': 'etl'}),
-#         ('*', {'queue': 'default'}),
-#     ],
-# )
+app.conf.task_routes = (
+    [
+        ('utilities.tasks.send_user_activation_code_task', {'queue': 'sms'}),
+        ('utilities.tasks.send_user_reset_password_code_task', {'queue': 'sms'}),
+        ('etl.tasks.*', {'queue': 'etl'}),
+        ('*', {'queue': 'default'}),
+    ],
+)
