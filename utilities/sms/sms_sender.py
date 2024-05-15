@@ -1,7 +1,9 @@
 import logging
+from abc import ABC, abstractmethod
 
 
-class SmsReceiver:
+class SmsReceiver(ABC):
+    @abstractmethod
     def receive_sms(self, template_id=None, template_name=None, plain_text=None):
         raise NotImplementedError('To be implemented by subclasses')
 
