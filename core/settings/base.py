@@ -232,7 +232,7 @@ def get_redis_connection_string(host: str, port: str, username: str = "",
     if not username and not password:
         return f'redis://{host}:{port}/0'
 
-    return f'redis://{username}:{password}@{host}:{port}/0'
+    return f'redis://{username}@{host}:{port}/0'
 
 
 REDIS_HOST = os.environ["REDIS_HOST"]
@@ -329,3 +329,9 @@ IS_PRODUCTION = False
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 USE_DEPRECATED_PYTZ = True
+
+# SMS
+SMS_IR_USER_RESET_PASSWORD_TEMPLATE_ID = os.environ.get('SMS_IR_USER_RESET_PASSWORD_TEMPLATE_ID')
+SMS_IR_USER_ACTIVATION_TEMPLATE_ID = os.environ.get('SMS_IR_USER_ACTIVATION_TEMPLATE_ID')
+SMS_IR_API_KEY = os.environ.get('SMS_IR_API_KEY')
+SMS_IR_LINE_NUMBER = os.environ.get('SMS_IR_LINE_NUMBER')

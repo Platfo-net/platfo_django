@@ -19,7 +19,6 @@ class SmsNotification(models.Model):
 
         if not (self.template_name or self.plain_text or self.template_id):
             raise ValueError('Sms must have either template_name or plain_text or template_id')
-
         try:
             logging.info('Queueing SMS', extra={
                 'RECEIVER': self.receiver,

@@ -5,6 +5,7 @@ from django_lifecycle import hook, BEFORE_CREATE
 from django_lifecycle.mixins import LifecycleModelMixin
 
 from account.querysets.user_queryset import CustomUserManager
+from account.utils import normalize_phone_number
 from utilities.models.base_model import BaseModel
 from utilities.models.phone_field import PhoneField
 from utilities.sms import sms_sender
@@ -15,7 +16,6 @@ class User(LifecycleModelMixin, AbstractUser, BaseModel, SmsReceiver):
     """
     Custom User Model with additional fields
     """
-    uuid = models.UUIDField(db_index=True, unique=True, default=uuid.uuid4)
     username = models.CharField(max_length=255, null=True, blank=True, unique=True)
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
@@ -35,7 +35,7 @@ class User(LifecycleModelMixin, AbstractUser, BaseModel, SmsReceiver):
         return f"{self.first_name} {self.last_name}"
 
     def receive_sms(self, template_id=None, template_name=None, plain_text=None):
-        sms_sender.send(f'+{self.phone_country_code}{self.phone_number}',
+        sms_sender.send(f'+{self.phone_country_code}{normalize_phone_number(self.phone_number)}',
                         template_id=template_id, template_name=template_name, plain_text=plain_text)
 
     @hook(BEFORE_CREATE)

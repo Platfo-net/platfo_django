@@ -77,10 +77,27 @@ class UserLoginSerializer(serializers.Serializer):
         phone_number = attrs['phone_number']
         password = attrs['password']
         try:
-            user = User.objects.get(phone_number=phone_number)
+            user = User.objects.filter(phone_number=phone_number).first()
         except User.DoesNotExist:
             raise serializers.ValidationError('User with this phone number does not exist.')
         if not user.check_password(password):
             raise serializers.ValidationError('Invalid password.')
+        attrs['user'] = user
+        return attrs
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    phone_number = serializers.CharField()
+    phone_country_code = serializers.CharField()
+
+    def validate(self, attrs):
+        phone_number = attrs['phone_number']
+        phone_country_code = attrs['phone_country_code']
+        try:
+            user = User.objects.filter(phone_number=phone_number,
+                                       phone_country_code=phone_country_code).first()
+        except User.DoesNotExist:
+            raise serializers.ValidationError('User with this phone number does not exist.')
+
         attrs['user'] = user
         return attrs
