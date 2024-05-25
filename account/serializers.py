@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
 from utilities import s3_storage
@@ -12,9 +13,11 @@ class UserRegisterByPhoneNumberSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'password', 'phone_number', 'phone_country_code')
 
     def validate(self, attrs):
+        phone_number = attrs['phone_number']
+        phone_country_code = attrs['phone_country_code']
         existing_user = User.objects.existing(
-            phone_number=attrs['phone_number'],
-            phone_country_code=attrs['phone_country_code'],
+            phone_number=phone_number,
+            phone_country_code=phone_country_code,
         ).first()
 
         if not validate_password(attrs['password']):
@@ -52,7 +55,6 @@ class UpdateUserPasswordSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = (
@@ -86,7 +88,7 @@ class UserLoginSerializer(serializers.Serializer):
         return attrs
 
 
-class ForgotPasswordSerializer(serializers.Serializer):
+class BaseUserSerializer(serializers.Serializer):
     phone_number = serializers.CharField()
     phone_country_code = serializers.CharField()
 
@@ -94,10 +96,31 @@ class ForgotPasswordSerializer(serializers.Serializer):
         phone_number = attrs['phone_number']
         phone_country_code = attrs['phone_country_code']
         try:
-            user = User.objects.filter(phone_number=phone_number,
-                                       phone_country_code=phone_country_code).first()
+            user = User.objects.existing(phone_number=phone_number,
+                                         phone_country_code=phone_country_code).first()
         except User.DoesNotExist:
             raise serializers.ValidationError('User with this phone number does not exist.')
-
         attrs['user'] = user
         return attrs
+
+
+class ForgotPasswordSerializer(BaseUserSerializer):
+    pass
+
+
+class ChangePasswordSerializer(BaseUserSerializer):
+    code = serializers.IntegerField()
+    token = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        password = attrs['password']
+        if not validate_password(password):
+            raise serializers.ValidationError('Your password is not acceptable')
+        return attrs
+
+
+class ActivateBySMSSerializer(BaseUserSerializer):
+    code = serializers.IntegerField()
+    token = serializers.CharField()

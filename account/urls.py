@@ -1,6 +1,7 @@
 from django.urls import path
 
-from account.views.auth_view import LoginPhoneNumberView, ForgotPasswordView
+from account.views.auth_view import LoginPhoneNumberView, ForgotPasswordView, ChangePasswordView, \
+    ActivationCodeBySMSView, ActivateBySMSView
 from account.views.user_view import RegisterByPhoneNumberView, UpdateUserView, \
     ChangeUserPasswordView, GetUserMeView, UploadUserProfileImageView
 
@@ -14,4 +15,7 @@ urlpatterns = [
     # auth
     path('login-phone-number/', LoginPhoneNumberView.as_view(), name='login-phone-number'),
     path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
+    path('change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path('activation-code-by-sms/', ActivationCodeBySMSView.as_view(), name='activation-code-by-sms'),
+    path('activate-by-sms/', ActivateBySMSView.as_view(), name='activate-by-sms'),
 ]
